@@ -105,6 +105,8 @@ analyze = function( df    = NULL,
   #verify the data shape
   tryCatch({
     df <- as.matrix( df )
+    colnames(df) <- NULL
+    rownames(df) <- NULL
   }, error = function(e) {
     stop(
       paste0(
@@ -130,8 +132,10 @@ analyze = function( df    = NULL,
   #create dataset
   if(shape == "vertical") {
     df <- rbind( names, df)
+    rownames(df) <- NULL
   } else {
     df <- cbind( names, df)
+    colnames(df) <- NULL
   }
 
   ###########
@@ -139,14 +143,14 @@ analyze = function( df    = NULL,
   ###########
 
   #prepare the payload query
-  payload  <- list(data        = df,
+  payload  <- toJSON( list(data        = df,
                    userToken   = token,
                    dataShape   = shape,
                    inits       = inits,
                    fast        = fast,
                    email       = email,
                    sep         = sep,
-                   dbAllowed   = db)
+                   dbAllowed   = db), na = 'null')
 
   #call API
   url       <- paste(url, "/analyze", sep="")
@@ -173,18 +177,20 @@ analyze = function( df    = NULL,
     if(length(structure$structure) > 0) {
       for( i in 1:length(structure$structure) ) {
         x <- structure$structure[[i]]
-        out[i,"id"]       <- ifelse( x[["id"]] == "NA"         , NA, x[["id"]] );
-        out[i,"column"]   <- ifelse( x[["column"]] == "NA"     , NA, x[["column"]] );
-        out[i,"name"]     <- ifelse( x[["name"]] == "NA"       , NA, x[["name"]] );
-        out[i,"empty"]    <- ifelse( x[["empty"]] == "NA"      , NA, x[["empty"]] );
-        out[i,"class"]    <- ifelse( x[["class"]] == "NA"      , NA, x[["class"]] );
-        out[i,"feature"]  <- ifelse( x[["feature"]] == "NA"    , NA, x[["feature"]] );
-        out[i,"cleaner"]  <- ifelse( x[["cleaner"]] == "NA"    , NA, x[["cleaner"]] );
-        out[i,"format"]   <- ifelse( x[["format"]] == "NA"     , NA, x[["format"]] );
-        out[i,"p_class"]  <- ifelse( x[["p_class"]] == "NA"    , NA, x[["p_class"]] );
-        out[i,"provider"] <- ifelse( is.null( x[["provider"]] ), NA, x[["provider"]] )
-        out[i,"table"]    <- ifelse( is.null( x[["table"]] )   , NA, x[["table"]] )
-        out[i,"p_data"]   <- ifelse( is.null( x[["p_data"]] )  , NA, x[["p_data"]] )
+
+        #get structure
+        out[i,"id"]       <- ifelse( isMissing(x[["id"]])      , NA, x[["id"]] )
+        out[i,"column"]   <- ifelse( isMissing(x[["column"]])  , NA, x[["column"]] )
+        out[i,"name"]     <- ifelse( isMissing(x[["name"]])    , NA, x[["name"]] )
+        out[i,"empty"]    <- ifelse( isMissing(x[["empty"]])   , NA, x[["empty"]] )
+        out[i,"class"]    <- ifelse( isMissing(x[["class"]])   , NA, x[["class"]] )
+        out[i,"feature"]  <- ifelse( isMissing(x[["feature"]]) , NA, x[["feature"]] )
+        out[i,"cleaner"]  <- ifelse( isMissing(x[["cleaner"]]) , NA, x[["cleaner"]] )
+        out[i,"format"]   <- ifelse( isMissing(x[["format"]])  , NA, x[["format"]] )
+        out[i,"p_class"]  <- ifelse( isMissing(x[["p_class"]]) , NA, x[["p_class"]] )
+        out[i,"provider"] <- ifelse( isMissing(x[["provider"]]), NA, x[["provider"]] )
+        out[i,"table"]    <- ifelse( isMissing(x[["table"]])   , NA, x[["table"]] )
+        out[i,"p_data"]   <- ifelse( isMissing(x[["p_data"]])  , NA, x[["p_data"]] )
       }
     } else {
       stop(
