@@ -9,7 +9,7 @@
 fill = function( df    = NULL,
                  structure = NULL,
                  keys  = NULL,
-                 meta  = NULL,
+                 default  = NULL,
                  shape = "vertical",
                  inits = 1,
                  fast  = TRUE,
@@ -90,17 +90,17 @@ fill = function( df    = NULL,
 
   #prepare the payload query
   payload  <- toJSON( list(structure   = structure,
-                   data        = df,
-                   keys        = NULL,
-                   meta        = NULL,
-                   userToken   = token,
-                   email       = email,
-                   dataForm    = form,
-                   dbAllowed   = db,
-                   minAccuracy = accu,
-                   sep         = sep,
-                   direction   = shape,
-                   inits       = inits), na = 'null')
+                           data        = df,
+                           keys        = keys,
+                           meta        = default,
+                           userToken   = token,
+                           email       = email,
+                           dataForm    = form,
+                           dbAllowed   = db,
+                           minAccuracy = accu,
+                           sep         = sep,
+                           direction   = shape,
+                           inits       = inits), na = 'null')
 
   #call API
   url       <- paste(url, "/fill", sep="")
@@ -111,7 +111,12 @@ fill = function( df    = NULL,
 
     response <- content(response)
 
-    if(length(response$structure) > 0) {
+    #consistency check, depdning on API version
+    if( !is.null( response$structure ) ) {
+      response <- response$structure
+    }
+
+    if(length(response$out) > 0) {
 
       #get data values
       data <- data.frame( matrix( unlist( response$out$data ), nrow=length(response$out$data), byrow=T), stringsAsFactors = F, check.names = F)
@@ -211,7 +216,7 @@ fill = function( df    = NULL,
       #output
       out <- list( 'data'        = data,
                    'structure.x' = structure.x,
-                   'structure.y' = structure.x,
+                   'structure.y' = structure.y,
                    'keys'        = keys,
                    'default'     = default )
 

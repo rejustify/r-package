@@ -143,14 +143,14 @@ analyze = function( df    = NULL,
   ###########
 
   #prepare the payload query
-  payload  <- toJSON( list(data        = df,
-                   userToken   = token,
-                   dataShape   = shape,
-                   inits       = inits,
-                   fast        = fast,
-                   email       = email,
-                   sep         = sep,
-                   dbAllowed   = db), na = 'null')
+  payload  <- toJSON( list(data = df,
+                           userToken   = token,
+                           dataShape   = shape,
+                           inits       = inits,
+                           fast        = fast,
+                           email       = email,
+                           sep         = sep,
+                           dbAllowed   = db), na = 'null')
 
   #call API
   url       <- paste(url, "/analyze", sep="")
