@@ -1,0 +1,59 @@
+#' \code{callCurl} is a wrapper of the httr GET/POST functions to communicate with
+#' the APIs. If needed, the proxy settings can be given explicitly, or set
+#' in global variables 'rejustify.proxyUrl' and 'rejustify.proxyPort'.
+#'
+#' @param method Method of the call (GET or POST).
+#' @param url Address of the API call.
+#' @param body Request body in case of using POST method.
+#' @param proxyUrl Url address of the proxy server.
+#' @param proxyPort Communication port of the proxy server.
+#' @return API response or errors
+#' @examples
+#' callCurl("GET", "http://api.rejustify.com/getProviders")
+
+callCurl = function(method    = "GET",
+                    url       = NULL,
+                    body      = NULL,
+                    proxyUrl  = getOption("rejustify.proxyUrl"),
+                    proxyPort = getOption("rejustify.proxyPort") ) {
+
+  #check the method type
+  if( !( toupper(method) == "GET" | toupper(method) == "POST" ) ) {
+    callFun = NULL
+  } else {
+    callFun = match.fun( toupper( method ) )
+  }
+
+  if( !is.null(proxyUrl) ) {
+    tryCatch({
+      response <- callFun(url,
+                          use_proxy(proxyUrl, proxyPort),
+                          add_headers('Content-Type'='application/json'),
+                          body = body,
+                          encode = "json",
+                          verbose() )
+    }, error = function(e) {
+      stop(
+        paste0(
+          "There was a problem when accessing the API."
+        ),
+        call. = FALSE
+      )
+    })
+  } else {
+    tryCatch({
+      response <- callFun(url,
+                          add_headers('Content-Type'='application/json'),
+                          body = body,
+                          encode = "json",
+                          verbose() )
+    }, error = function(e) {
+      stop(
+        paste0(
+          "There was a problem when accessing the API."
+        ),
+        call. = FALSE
+      )
+    })
+  }
+}
