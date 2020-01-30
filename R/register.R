@@ -7,7 +7,8 @@
 #' @return errors only
 #' @examples
 #' register(token = "your_token", email = "your_email")
-
+#'
+#' @export
 register = function(token = NULL, email = NULL) {
   if( is.null(token) | is.null(email) ) {
     stop(

@@ -6,13 +6,12 @@
 #' @examples
 #' fill(df, structure, modify)
 #'
-fill = function( df    = NULL,
+fill = function( df        = NULL,
                  structure = NULL,
-                 keys  = NULL,
-                 default  = NULL,
+                 keys      = NULL,
+                 default   = NULL,
                  shape = "vertical",
                  inits = 1,
-                 fast  = TRUE,
                  sep   = ",",
                  db    = FALSE,
                  accu  = 0.75,
@@ -89,7 +88,7 @@ fill = function( df    = NULL,
   ###########
 
   #prepare the payload query
-  payload  <- toJSON( list(structure   = structure,
+  payload <- toJSON( list(structure   = structure,
                            data        = df,
                            keys        = keys,
                            meta        = default,
@@ -158,33 +157,37 @@ fill = function( df    = NULL,
       }
 
       #get structure.y
-      structure.y <- data.frame( id       = integer(),
-                                 column   = integer(),
-                                 name     = character(),
-                                 empty    = integer(),
-                                 class    = character(),
-                                 feature  = character(),
-                                 cleaner  = character(),
-                                 format   = character(),
-                                 p_class  = double(),
-                                 provider = character(),
-                                 table    = character(),
-                                 p_data   = double(), stringsAsFactors=FALSE)
+      out.structure.y <- list()
+      for( j in 1:length(response$out$meta) ) {
+        structure.y <- data.frame( id       = integer(),
+                                   column   = integer(),
+                                   name     = character(),
+                                   empty    = integer(),
+                                   class    = character(),
+                                   feature  = character(),
+                                   cleaner  = character(),
+                                   format   = character(),
+                                   p_class  = double(),
+                                   provider = character(),
+                                   table    = character(),
+                                   p_data   = double(), stringsAsFactors=FALSE)
 
-      for( i in 1:length(response$out$meta[[1]]) ) {
-        x <- response$out$meta[[1]][[i]]
-        structure.y[i,"id"]       <- ifelse( isMissing(x[["id"]])      , NA, x[["id"]] );
-        structure.y[i,"column"]   <- ifelse( isMissing(x[["column"]])  , NA, x[["column"]] );
-        structure.y[i,"name"]     <- ifelse( isMissing(x[["name"]])    , NA, x[["name"]] );
-        structure.y[i,"empty"]    <- ifelse( isMissing(x[["empty"]])   , NA, x[["empty"]] );
-        structure.y[i,"class"]    <- ifelse( isMissing(x[["class"]])   , NA, x[["class"]] );
-        structure.y[i,"feature"]  <- ifelse( isMissing(x[["feature"]]) , NA, x[["feature"]] );
-        structure.y[i,"cleaner"]  <- ifelse( isMissing(x[["cleaner"]]) , NA, x[["cleaner"]] );
-        structure.y[i,"format"]   <- ifelse( isMissing(x[["format"]])  , NA, x[["format"]] );
-        structure.y[i,"p_class"]  <- ifelse( isMissing(x[["p_class"]]) , NA, x[["p_class"]] );
-        structure.y[i,"provider"] <- ifelse( isMissing(x[["provider"]]), NA, x[["provider"]] )
-        structure.y[i,"table"]    <- ifelse( isMissing(x[["table"]])   , NA, x[["table"]] )
-        structure.y[i,"p_data"]   <- ifelse( isMissing(x[["p_data"]])  , NA, x[["p_data"]] )
+        for( i in 1:length(response$out$meta[[j]]) ) {
+          x <- response$out$meta[[j]][[i]]
+          structure.y[i,"id"]       <- ifelse( isMissing(x[["id"]])      , NA, x[["id"]] );
+          structure.y[i,"column"]   <- ifelse( isMissing(x[["column"]])  , NA, x[["column"]] );
+          structure.y[i,"name"]     <- ifelse( isMissing(x[["name"]])    , NA, x[["name"]] );
+          structure.y[i,"empty"]    <- ifelse( isMissing(x[["empty"]])   , NA, x[["empty"]] );
+          structure.y[i,"class"]    <- ifelse( isMissing(x[["class"]])   , NA, x[["class"]] );
+          structure.y[i,"feature"]  <- ifelse( isMissing(x[["feature"]]) , NA, x[["feature"]] );
+          structure.y[i,"cleaner"]  <- ifelse( isMissing(x[["cleaner"]]) , NA, x[["cleaner"]] );
+          structure.y[i,"format"]   <- ifelse( isMissing(x[["format"]])  , NA, x[["format"]] );
+          structure.y[i,"p_class"]  <- ifelse( isMissing(x[["p_class"]]) , NA, x[["p_class"]] );
+          structure.y[i,"provider"] <- ifelse( isMissing(x[["provider"]]), NA, x[["provider"]] )
+          structure.y[i,"table"]    <- ifelse( isMissing(x[["table"]])   , NA, x[["table"]] )
+          structure.y[i,"p_data"]   <- ifelse( isMissing(x[["p_data"]])  , NA, x[["p_data"]] )
+        }
+        out.structure.y[[j]] <- structure.y
       }
 
       #get keys
@@ -195,6 +198,7 @@ fill = function( df    = NULL,
                             "id.y",
                             "name.y",
                             "class",
+                            "variation.x",
                             "method",
                             "column.id.x",
                             "column.name.x")
@@ -202,23 +206,26 @@ fill = function( df    = NULL,
 
       #get default labels
       if(!isMissing(response$out$labels)) {
-        response$out$labels[[1]] <- lapply(response$out$labels[[1]], FUN = function(x) {
-                                  lapply(x, FUN = function(y) {
-                                    ifelse(isMissing(y[[1]]), NA, y[[1]])
+        default <- list()
+        for(i in 1:length(response$out$labels) ) {
+          response$out$labels[[i]] <- lapply(response$out$labels[[i]], FUN = function(x) {
+                                    lapply(x, FUN = function(y) {
+                                      ifelse(isMissing(y[[1]]), NA, y[[1]])
+                                    })
                                   })
-                                })
 
-        default <- data.frame( matrix( unlist( response$out$labels ), nrow=length(response$out$labels[[1]]), byrow=T), stringsAsFactors = F, check.names = F)
-        colnames(default) <- c("code_default", "label_default")
-        rownames(default) <- names(response$out$labels[[1]])
+          default[[i]] <- data.frame( matrix( unlist( response$out$labels[[i]] ), nrow=length(response$out$labels[[i]]), byrow=T), stringsAsFactors = F, check.names = F)
+          colnames(default[[i]]) <- c("code_default", "label_default")
+          rownames(default[[i]]) <- names(response$out$labels[[i]])
+        }
       }
 
       #output
       out <- list( 'data'        = data,
                    'structure.x' = structure.x,
-                   'structure.y' = structure.y,
+                   'structure.y' = list(column.id.x = list( unlist( response$out$column ) ), structure.y = out.structure.y),
                    'keys'        = keys,
-                   'default'     = default )
+                   'default'     = list(column.id.x = list( unlist( response$out$column ) ), default = default) )
 
     } else {
       stop(

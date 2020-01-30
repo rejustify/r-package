@@ -1,13 +1,14 @@
 Package: rejustify
 Type: Package
-Title: [To be added]
+Title: Support for rejustify API
 Version: 0.1.0
 Author: M. Wolski <marcin@rejustify.com>
 Maintainer: M. Wolski <marcin@rejustify.com>
-Description: [To be added]
+Description: The set of routines to facilitate communication with rejustify API
 License: GNU GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
     httr,
     jsonlite
+RoxygenNote: 7.0.2

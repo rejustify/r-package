@@ -30,8 +30,7 @@ callCurl = function(method    = "GET",
                           use_proxy(proxyUrl, proxyPort),
                           add_headers('Content-Type'='application/json'),
                           body = body,
-                          encode = "raw",
-                          verbose() )
+                          encode = "raw" )
     }, error = function(e) {
       stop(
         paste0(
@@ -45,8 +44,7 @@ callCurl = function(method    = "GET",
       response <- callFun(url,
                           add_headers('Content-Type'='application/json'),
                           body = body,
-                          encode = "raw",
-                          verbose() )
+                          encode = "raw" )
     }, error = function(e) {
       stop(
         paste0(
