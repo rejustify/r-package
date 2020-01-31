@@ -4,11 +4,11 @@ Title: Support for rejustify API
 Version: 1.0.0
 Author: M. Wolski <marcin@rejustify.com>
 Maintainer: M. Wolski <marcin@rejustify.com>
-Description: Set of routines to facilitate communication with rejustify API
-License: GNU GPL-3
+Description: Set of routines to facilitate communication with rejustify API.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    httr,
-    jsonlite
+    httr (>= 1.4),
+    jsonlite (>= 1.6)
 RoxygenNote: 7.0.2

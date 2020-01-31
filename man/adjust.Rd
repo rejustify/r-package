@@ -34,11 +34,17 @@ option is enabled, the new values will be used to train the algorithms. If \code
 will not be stored by the API but the changes will be recognized in the current API call.
 }
 \examples{
+#API setup
+setCurl()
+
+#register token/email
+register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
+
 #sample data set
 df <- data.frame(year = c("2009", "2010", "2011"),
                  country = c("Poland", "Poland", "Poland"),
                  `gross domestic product` = c(NA, NA, NA),
-                 check.names = F, stringsAsFactors = F)
+                 check.names = FALSE, stringsAsFactors = FALSE)
 
 #endpoint analyze
 st <- analyze(df)

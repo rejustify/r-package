@@ -12,8 +12,8 @@
 #'
 #' @return API response or errors
 #'
-#' @examples
-#' callCurl("GET", "http://api.rejustify.com/getProviders")
+#' @importFrom httr use_proxy add_headers GET POST
+#' @export
 
 callCurl = function(method    = "GET",
                     url       = NULL,
@@ -28,6 +28,7 @@ callCurl = function(method    = "GET",
     callFun = match.fun( toupper( method ) )
   }
 
+  response <- NULL
   if( !is.null(proxyUrl) ) {
     tryCatch({
       response <- callFun(url,
@@ -58,4 +59,5 @@ callCurl = function(method    = "GET",
       )
     })
   }
+  return(response)
 }

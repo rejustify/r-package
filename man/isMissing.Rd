@@ -13,7 +13,3 @@ isMissing(x)
 The function checks if a variable is either null, NA, or has an
 assigned value. In case of vectors, the condition is set on all values.
 }
-\examples{
-x <- NULL
-isMissing(x)
-}

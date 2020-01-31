@@ -97,11 +97,17 @@ The corresponding structures are marked with the same principles, as \code{struc
 data \code{x} (except for missing values), but only adjust \code{y}.
 }
 \examples{
+#API setup
+setCurl()
+
+#register token/email
+register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
+
 #sample data set
 df <- data.frame(year = c("2009", "2010", "2011"),
                  country = c("Poland", "Poland", "Poland"),
                  `gross domestic product` = c(NA, NA, NA),
-                 check.names = F, stringsAsFactors = F)
+                 check.names = FALSE, stringsAsFactors = FALSE)
 
 #endpoint analyze
 st <- analyze(df)

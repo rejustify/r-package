@@ -93,6 +93,9 @@ to assigned \code{class}, \code{feature}, \code{cleaner} and \code{format}, (ii)
 be stored only upon a change of values within groups (i-iii).
 }
 \examples{
+#API setup
+setCurl()
+
 #register token/email
 register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
 
@@ -100,14 +103,14 @@ register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
 df <- data.frame(year = c("2009", "2010", "2011"),
                  country = c("Poland", "Poland", "Poland"),
                  `gross domestic product` = c(NA, NA, NA),
-                 check.names = F, stringsAsFactors = F)
+                 check.names = FALSE, stringsAsFactors = FALSE)
 analyze(df)
 
 #data set with one-line multi-dimension header (semi-colon separated)
 df <- data.frame(country = c("Poland", "Poland", "Poland"),
                  `gross domestic product;2009` = c(NA, NA, NA),
                  `gross domestic product;2010` = c(NA, NA, NA),
-                  check.names = F, stringsAsFactors = F)
+                  check.names = FALSE, stringsAsFactors = FALSE)
 analyze(df, sep = ";")
 
 #data set with multi-line header

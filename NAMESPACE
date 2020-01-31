@@ -2,6 +2,13 @@
 
 export(adjust)
 export(analyze)
+export(callCurl)
 export(fill)
 export(register)
 export(setCurl)
+importFrom(httr,GET)
+importFrom(httr,POST)
+importFrom(httr,add_headers)
+importFrom(httr,content)
+importFrom(httr,use_proxy)
+importFrom(jsonlite,toJSON)

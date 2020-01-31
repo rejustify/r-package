@@ -66,6 +66,9 @@
 #' @return structure of the \code{df} data set
 #'
 #' @examples
+#' #API setup
+#' setCurl()
+#'
 #' #register token/email
 #' register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
 #'
@@ -73,14 +76,14 @@
 #' df <- data.frame(year = c("2009", "2010", "2011"),
 #'                  country = c("Poland", "Poland", "Poland"),
 #'                  `gross domestic product` = c(NA, NA, NA),
-#'                  check.names = F, stringsAsFactors = F)
+#'                  check.names = FALSE, stringsAsFactors = FALSE)
 #' analyze(df)
 #'
 #' #data set with one-line multi-dimension header (semi-colon separated)
 #' df <- data.frame(country = c("Poland", "Poland", "Poland"),
 #'                  `gross domestic product;2009` = c(NA, NA, NA),
 #'                  `gross domestic product;2010` = c(NA, NA, NA),
-#'                   check.names = F, stringsAsFactors = F)
+#'                   check.names = FALSE, stringsAsFactors = FALSE)
 #' analyze(df, sep = ";")
 #'
 #' #data set with multi-line header
@@ -89,7 +92,10 @@
 #'             c("gross domestic product", "2010", NA, NA, NA))
 #' analyze(df, inits = 2)
 #'
+#' @importFrom httr content
+#' @importFrom jsonlite toJSON
 #' @export
+
 analyze = function( df,
                     shape = "vertical",
                     inits = 1,

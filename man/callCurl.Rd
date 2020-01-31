@@ -31,6 +31,3 @@ The function offers a basic functionality of commands GET/POST from \code{httr}
 package to communicate with the APIs. If needed, the proxy settings can be given explicitly, or set
 in global variables 'rejustify.proxyUrl' and 'rejustify.proxyPort'.
 }
-\examples{
-callCurl("GET", "http://api.rejustify.com/getProviders")
-}

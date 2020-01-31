@@ -62,11 +62,17 @@
 #' @return list consisting of 5 elements: \code{data}, \code{structure.x}, \code{structure.y}, \code{keys} and \code{default}
 #'
 #' @examples
+#' #API setup
+#' setCurl()
+#'
+#' #register token/email
+#' register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
+#'
 #' #sample data set
 #' df <- data.frame(year = c("2009", "2010", "2011"),
 #'                  country = c("Poland", "Poland", "Poland"),
 #'                  `gross domestic product` = c(NA, NA, NA),
-#'                  check.names = F, stringsAsFactors = F)
+#'                  check.names = FALSE, stringsAsFactors = FALSE)
 #'
 #' #endpoint analyze
 #' st <- analyze(df)
@@ -74,6 +80,8 @@
 #' #endpoint fill
 #' df1 <- fill(df, st)
 #'
+#' @importFrom httr content
+#' @importFrom jsonlite toJSON
 #' @export
 
 fill = function( df,

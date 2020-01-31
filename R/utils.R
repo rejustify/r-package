@@ -4,10 +4,6 @@
 #' assigned value. In case of vectors, the condition is set on all values.
 #'
 #' @param x Variable to test.
-#'
-#' @examples
-#' x <- NULL
-#' isMissing(x)
 
 isMissing = function(x) {
   if(!is.null(x)) {
