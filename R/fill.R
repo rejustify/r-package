@@ -24,7 +24,7 @@
 #' used in the past.
 #' @param keys The matching keys and matching methods between dimensions in \code{x} and {y} data sets. The elements in
 #' \code{keys} are determined based on information provided in data \code{x} and \code{y}, for each empty column. The details
-#' behind both data structures can be visualized by \code{structure.x} and \structure{y}.
+#' behind both data structures can be visualized by \code{structure.x} and \code{y}.
 #'
 #' Matching keys are given consecutively, i.e. the first elements in \code{id.x} and \code{name.x} correspond
 #' to the first elements in \code{id.y} and \code{name.y}. Dimension names are given for the better readability of

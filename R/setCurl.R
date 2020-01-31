@@ -15,7 +15,6 @@
 #' @export
 
 setCurl = function(mainUrl   = "http://api.rejustify.com",
-                   proxy     = getOption("rejustify.proxy"),
                    proxyUrl  = getOption("rejustify.proxyUrl"),
                    proxyPort = getOption("rejustify.proxyPort") ) {
 
