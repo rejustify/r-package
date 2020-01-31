@@ -1,13 +1,17 @@
-#' \code{callCurl} is a wrapper of the httr GET/POST functions to communicate with
-#' the APIs. If needed, the proxy settings can be given explicitly, or set
+#' a wrapper of the httr GET/POST functions
+#'
+#' @description The function offers a basic functionality of commands GET/POST from \code{httr}
+#' package to communicate with the APIs. If needed, the proxy settings can be given explicitly, or set
 #' in global variables 'rejustify.proxyUrl' and 'rejustify.proxyPort'.
 #'
 #' @param method Method of the call (GET or POST).
-#' @param url Address of the API call.
+#' @param url Address of the API.
 #' @param body Request body in case of using POST method.
 #' @param proxyUrl Url address of the proxy server.
 #' @param proxyPort Communication port of the proxy server.
+#'
 #' @return API response or errors
+#'
 #' @examples
 #' callCurl("GET", "http://api.rejustify.com/getProviders")
 

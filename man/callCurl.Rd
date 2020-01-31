@@ -2,9 +2,7 @@
 % Please edit documentation in R/callCurl.R
 \name{callCurl}
 \alias{callCurl}
-\title{\code{callCurl} is a wrapper of the httr GET/POST functions to communicate with
-the APIs. If needed, the proxy settings can be given explicitly, or set
-in global variables 'rejustify.proxyUrl' and 'rejustify.proxyPort'.}
+\title{a wrapper of the httr GET/POST functions}
 \usage{
 callCurl(
   method = "GET",
@@ -17,7 +15,7 @@ callCurl(
 \arguments{
 \item{method}{Method of the call (GET or POST).}
 
-\item{url}{Address of the API call.}
+\item{url}{Address of the API.}
 
 \item{body}{Request body in case of using POST method.}
 
@@ -29,8 +27,8 @@ callCurl(
 API response or errors
 }
 \description{
-\code{callCurl} is a wrapper of the httr GET/POST functions to communicate with
-the APIs. If needed, the proxy settings can be given explicitly, or set
+The function offers a basic functionality of commands GET/POST from \code{httr}
+package to communicate with the APIs. If needed, the proxy settings can be given explicitly, or set
 in global variables 'rejustify.proxyUrl' and 'rejustify.proxyPort'.
 }
 \examples{

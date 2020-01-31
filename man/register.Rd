@@ -2,9 +2,7 @@
 % Please edit documentation in R/register.R
 \name{register}
 \alias{register}
-\title{\code{register} sets the token and email as global variables
-to be accessed by rejustify package. The email must correspond to
-the token that was assigned to it.}
+\title{sets the token and email as global variables}
 \usage{
 register(token = NULL, email = NULL)
 }
@@ -17,11 +15,11 @@ register(token = NULL, email = NULL)
 errors only
 }
 \description{
-\code{register} sets the token and email as global variables
-to be accessed by rejustify package. The email must correspond to
-the token that was assigned to it.
+The function stores the account details into memory to be easier accessed by
+rejustify package. The email must correspond to the token that was assigned to it. To register an
+account visit \code{rejustify.com}.
 }
 \examples{
-register(token = "your_token", email = "your_email")
+register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/setCurl.R
 \name{setCurl}
 \alias{setCurl}
-\title{\code{setCurl} sets the default configuration for curl calls}
+\title{sets the default configuration for curl calls}
 \usage{
 setCurl(
   mainUrl = "http://api.rejustify.com",
@@ -11,10 +11,20 @@ setCurl(
   proxyPort = getOption("rejustify.proxyPort")
 )
 }
+\arguments{
+\item{mainUrl}{Main address for rejustify API calls. Default is set to
+\code{http://api.rejustify.com}, but depending on the customer needs, the address may change.}
+
+\item{proxyUrl}{Address of the proxy server.}
+
+\item{proxyPort}{Port for communication with the proxy server.}
+}
 \description{
-\code{setCurl} sets the default configuration for curl calls
+The command stores the connection details into memory to be easier accessed by
+rejustify package.
 }
 \examples{
-to be added
+#setting up connection through proxy
+rejustify::setCurl(proxyUrl = "PROXY_ADDRESS", proxyPort = 8080)
 
 }

@@ -2,20 +2,17 @@
 % Please edit documentation in R/fill.R
 \name{fill}
 \alias{fill}
-\title{\code{fill} submits the dataset and structure to the fill API endpoint
-to retrieve the desired extra data points. At the current stage
-dataset must be rectangular, and structure should be in the shape proposed
-analyze function.}
+\title{communicates with rejustify/fill API endpoint}
 \usage{
 fill(
-  df = NULL,
-  structure = NULL,
+  df,
+  structure,
   keys = NULL,
   default = NULL,
   shape = "vertical",
   inits = 1,
   sep = ",",
-  db = TRUE,
+  learn = TRUE,
   accu = 0.75,
   form = "full",
   token = getOption("rejustify.token"),
@@ -23,13 +20,93 @@ fill(
   url = getOption("rejustify.mainUrl")
 )
 }
+\arguments{
+\item{df}{The data set to be analyzed. Must be matrix-convertible. If data frame,
+the dimension names will be taken as the row/column names. If matrix, the row/column
+names will be ignored, and the header will be set from matrix values in line with \code{inits}
+and \code{sep} specification.}
+
+\item{structure}{Structure of the \code{x} data set, characterizing classes, features, cleaners and formats
+of the columns/rows, and data provider/tables for empty columns. Perfectly, it should come from \code{analyze}
+endpoint.}
+
+\item{keys}{The matching keys and matching methods between dimensions in \code{x} and {y} data sets. The elements in
+\code{keys} are determined based on information provided in data \code{x} and \code{y}, for each empty column. The details
+behind both data structures can be visualized by \code{structure.x} and \structure{y}.
+
+Matching keys are given consecutively, i.e. the first elements in \code{id.x} and \code{name.x} correspond
+to the first elements in \code{id.y} and \code{name.y}. Dimension names are given for the better readability of
+the results, however, they are not necessary for API recognition. \code{keys} return also data classification in
+element \code{class} and the proposed matching method for each part of \code{id.x} and \code{id.y}.
+
+Currently, API suports 6 matching methods: \code{synonym-proximity-matching}, \code{synonym-matching}, \code{proximity-matching}, \code{time-matching},
+\code{exact-matching} and \code{value-selection}, which are given in a diminishing order of complexitiy. \code{synonym-proximity-matching}
+uses the proximity between the values in data \code{x} and \code{y} to the coresponding values in rejustify dictionary. If the proximity
+is above threshold \code{accu} and there are values in \code{x} and \code{y} pointing to the same element in the dictionary, the values will
+be matched. \code{synonym-matching} and \code{proximity-matching} use a similar logic either of the steps described for
+\code{synonym-proximity-matching}. \code{time-matching} aims at standardizing the time values to the same format before matching. For proper
+functioning it requires an accurate characterization of date format in \code{structure.x} (\code{structure.y} is already classified by rejustify).
+\code{exact-matching} will match two values only if they are identical. \code{value-selection} is a quasi matching method which for single-valued
+dimension \code{x} will return single value from \code{y}, as suggested by \code{default} specification. It is the most efficient
+matching type for dimensions which do not show any variability.}
+
+\item{default}{Default values used to lock dimensions in data \code{y} which will be not used for matching against
+data \code{x}. Each empty column to be filled, characterized by \code{default$column.id.x}, must contain description of
+the default values. If missing, the API will propose the default values in line with the history of how it was
+used in the past.}
+
+\item{shape}{It informs the API whether the data set should be read in by
+columns (vertical) or by rows (horizontal). The default is vertical.}
+
+\item{inits}{It informs the API how many initial rows (or columns in
+horizontal data), correspond to the header description. The default
+is inits=1.}
+
+\item{sep}{The header can also be described by single field values,
+separated by a given character separator, for instance 'GDP, Austria, 1999'.
+The option informs the API which separator should be used to split the
+initial header string into corresponding dimensions. The default is ','.}
+
+\item{learn}{It is TRUE if the user accepts rejustify to track her/his activity
+to enhance the performance of the AI algorithms. The default is FALSE.}
+
+\item{accu}{The minimum distance between strings to consider them as similar.}
+
+\item{form}{Requests the data to be returned either in \code{full}, or \code{partial shape}.
+The former returns the full original data with filled empty columns. The latter returns only the filled columns.}
+
+\item{token}{API token. By default read from global variables.}
+
+\item{email}{E-mail address for the account. By default read from global variables.}
+
+\item{url}{API url. By default read from global variables.}
+}
+\value{
+list consisting of 5 elements: \code{data}, \code{structure.x}, \code{structure.y}, \code{keys} and \code{default}
+}
 \description{
-\code{fill} submits the dataset and structure to the fill API endpoint
+The function submits the request tp the API fill endpoint
 to retrieve the desired extra data points. At the current stage
 dataset must be rectangular, and structure should be in the shape proposed
-analyze function.
+analyze function. The minimum required by the endpoint is the data set and
+the corresponding \code{structure}.
+
+The API calls the submitted data set by \code{x} and any server-side data set by \code{y}.
+The corresponding structures are marked with the same principles, as \code{structure.x} and
+\code{structure.y}, for instance. The principle rule of any data manipulation is to never change
+data \code{x} (except for missing values), but only adjust \code{y}.
 }
 \examples{
-fill(df, structure)
+#sample data set
+df <- data.frame(year = c("2009", "2010", "2011"),
+                 country = c("Poland", "Poland", "Poland"),
+                 `gross domestic product` = c(NA, NA, NA),
+                 check.names = F, stringsAsFactors = F)
+
+#endpoint analyze
+st <- analyze(df)
+
+#endpoint fill
+df1 <- fill(df, st)
 
 }

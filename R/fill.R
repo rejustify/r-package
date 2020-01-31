@@ -1,19 +1,89 @@
-#' \code{fill} submits the dataset and structure to the fill API endpoint
+#' communicates with rejustify/fill API endpoint
+#'
+#' @description The function submits the request tp the API fill endpoint
 #' to retrieve the desired extra data points. At the current stage
 #' dataset must be rectangular, and structure should be in the shape proposed
-#' analyze function.
+#' analyze function. The minimum required by the endpoint is the data set and
+#' the corresponding \code{structure}.
+#'
+#' The API calls the submitted data set by \code{x} and any server-side data set by \code{y}.
+#' The corresponding structures are marked with the same principles, as \code{structure.x} and
+#' \code{structure.y}, for instance. The principle rule of any data manipulation is to never change
+#' data \code{x} (except for missing values), but only adjust \code{y}.
+#'
+#' @param df The data set to be analyzed. Must be matrix-convertible. If data frame,
+#' the dimension names will be taken as the row/column names. If matrix, the row/column
+#' names will be ignored, and the header will be set from matrix values in line with \code{inits}
+#' and \code{sep} specification.
+#' @param structure Structure of the \code{x} data set, characterizing classes, features, cleaners and formats
+#' of the columns/rows, and data provider/tables for empty columns. Perfectly, it should come from \code{analyze}
+#' endpoint.
+#' @param default Default values used to lock dimensions in data \code{y} which will be not used for matching against
+#' data \code{x}. Each empty column to be filled, characterized by \code{default$column.id.x}, must contain description of
+#' the default values. If missing, the API will propose the default values in line with the history of how it was
+#' used in the past.
+#' @param keys The matching keys and matching methods between dimensions in \code{x} and {y} data sets. The elements in
+#' \code{keys} are determined based on information provided in data \code{x} and \code{y}, for each empty column. The details
+#' behind both data structures can be visualized by \code{structure.x} and \structure{y}.
+#'
+#' Matching keys are given consecutively, i.e. the first elements in \code{id.x} and \code{name.x} correspond
+#' to the first elements in \code{id.y} and \code{name.y}. Dimension names are given for the better readability of
+#' the results, however, they are not necessary for API recognition. \code{keys} return also data classification in
+#' element \code{class} and the proposed matching method for each part of \code{id.x} and \code{id.y}.
+#'
+#' Currently, API suports 6 matching methods: \code{synonym-proximity-matching}, \code{synonym-matching}, \code{proximity-matching}, \code{time-matching},
+#' \code{exact-matching} and \code{value-selection}, which are given in a diminishing order of complexitiy. \code{synonym-proximity-matching}
+#' uses the proximity between the values in data \code{x} and \code{y} to the coresponding values in rejustify dictionary. If the proximity
+#' is above threshold \code{accu} and there are values in \code{x} and \code{y} pointing to the same element in the dictionary, the values will
+#' be matched. \code{synonym-matching} and \code{proximity-matching} use a similar logic either of the steps described for
+#' \code{synonym-proximity-matching}. \code{time-matching} aims at standardizing the time values to the same format before matching. For proper
+#' functioning it requires an accurate characterization of date format in \code{structure.x} (\code{structure.y} is already classified by rejustify).
+#' \code{exact-matching} will match two values only if they are identical. \code{value-selection} is a quasi matching method which for single-valued
+#' dimension \code{x} will return single value from \code{y}, as suggested by \code{default} specification. It is the most efficient
+#' matching type for dimensions which do not show any variability.
+#' @param shape It informs the API whether the data set should be read in by
+#' columns (vertical) or by rows (horizontal). The default is vertical.
+#' @param inits It informs the API how many initial rows (or columns in
+#' horizontal data), correspond to the header description. The default
+#' is inits=1.
+#' @param sep The header can also be described by single field values,
+#' separated by a given character separator, for instance 'GDP, Austria, 1999'.
+#' The option informs the API which separator should be used to split the
+#' initial header string into corresponding dimensions. The default is ','.
+#' @param learn It is TRUE if the user accepts rejustify to track her/his activity
+#' to enhance the performance of the AI algorithms. The default is FALSE.
+#' @param accu The minimum distance between strings to consider them as similar.
+#' @param form Requests the data to be returned either in \code{full}, or \code{partial shape}.
+#' The former returns the full original data with filled empty columns. The latter returns only the filled columns.
+#' @param token API token. By default read from global variables.
+#' @param email E-mail address for the account. By default read from global variables.
+#' @param url API url. By default read from global variables.
+#'
+#' @return list consisting of 5 elements: \code{data}, \code{structure.x}, \code{structure.y}, \code{keys} and \code{default}
 #'
 #' @examples
-#' fill(df, structure, modify)
+#' #sample data set
+#' df <- data.frame(year = c("2009", "2010", "2011"),
+#'                  country = c("Poland", "Poland", "Poland"),
+#'                  `gross domestic product` = c(NA, NA, NA),
+#'                  check.names = F, stringsAsFactors = F)
 #'
-fill = function( df        = NULL,
-                 structure = NULL,
+#' #endpoint analyze
+#' st <- analyze(df)
+#'
+#' #endpoint fill
+#' df1 <- fill(df, st)
+#'
+#' @export
+
+fill = function( df,
+                 structure,
                  keys      = NULL,
                  default   = NULL,
                  shape = "vertical",
                  inits = 1,
                  sep   = ",",
-                 db    = FALSE,
+                 learn = TRUE,
                  accu  = 0.75,
                  form  = 'full',
                  token = getOption("rejustify.token"),
@@ -40,16 +110,32 @@ fill = function( df        = NULL,
   #data preparation
   ###########
 
+  #set shape dummy if data frame
+  ss <- 0
+  if(is.data.frame(df)) {
+    ss <- 1
+  }
+
   #adjust the data format
   if(shape == "vertical") {
-    names <- colnames(df)
+    if(ss == 1) {
+      names <- colnames(df)
+    } else {
+      names <- df[1:inits,]
+    }
   } else {
-    names <- rownames(df)
+    if(ss == 1) {
+      names <- rownames(df)
+    } else {
+      names <- df[,1:inits]
+    }
   }
 
   #verify the data shape
   tryCatch({
-    df <- as.matrix( df )
+    if(!is.matrix(df)) {
+      df <- as.matrix( df )
+    }
     colnames(df) <- NULL
     rownames(df) <- NULL
   }, error = function(e) {
@@ -64,9 +150,9 @@ fill = function( df        = NULL,
   #set column/row headers
   if( is.null( names ) ) {
     if(shape == "vertical") {
-      names <- paste( "Column", seq(1: ncol(df)) )
+      names <- paste( "_column", seq(1: ncol(df)) )
     } else {
-      names <- paste( "Row", seq(1: nrow(df)) )
+      names <- paste( "_row", seq(1: nrow(df)) )
     }
     warning(
       paste0(
@@ -75,12 +161,12 @@ fill = function( df        = NULL,
   }
 
   #create dataset
-  if(shape == "vertical") {
-    df <- rbind( names, df)
-    rownames(df) <- NULL
-  } else {
-    df <- cbind( names, df)
-    colnames(df) <- NULL
+  if(ss == 1) {
+    if(shape == "vertical") {
+        df <- rbind( names, df)
+    } else {
+      df <- cbind( names, df)
+    }
   }
 
   ###########
@@ -88,14 +174,14 @@ fill = function( df        = NULL,
   ###########
 
   #prepare the payload query
-  payload <- toJSON( list(structure   = structure,
+  payload <- toJSON( list(structure    = structure,
                            data        = df,
                            keys        = keys,
                            meta        = default,
                            userToken   = token,
                            email       = email,
                            dataForm    = form,
-                           dbAllowed   = db,
+                           dbAllowed   = learn,
                            minAccuracy = accu,
                            sep         = sep,
                            direction   = shape,
@@ -120,10 +206,17 @@ fill = function( df        = NULL,
       #get data values
       data <- data.frame( matrix( unlist( response$out$data ), nrow=length(response$out$data), byrow=T), stringsAsFactors = F, check.names = F)
       if(shape == "vertical") {
-        colnames(data) <- names
+        if(ss == 1) {
+          colnames(data) <- names
+        } else {
+          data <- rbind(names, as.matrix( data ) )
+        }
       } else {
-        data <- t(data)
-        colnames(data) <- names
+        if(ss == 1) {
+          rownames(data) <- names
+        } else {
+          data <- cbind(names, as.matrix( data ) )
+        }
       }
 
       #get structure.x
@@ -192,16 +285,8 @@ fill = function( df        = NULL,
 
       #get keys
       if(!isMissing(response$out$keys)) {
-        keys <- data.frame( matrix( unlist( response$out$keys ), nrow=length(response$out$keys), byrow=T), stringsAsFactors = F, check.names = F)
-        colnames(keys) <- c("id.x",
-                            "name.x",
-                            "id.y",
-                            "name.y",
-                            "class",
-                            "variation.x",
-                            "method",
-                            "column.id.x",
-                            "column.name.x")
+        keys <- lapply(response$out$keys, FUN = function(x) {
+                  lapply(x, FUN = function(y) { unlist(y) } ) } )
       }
 
       #get default labels
