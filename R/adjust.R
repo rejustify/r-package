@@ -16,8 +16,8 @@
 #' @param column The data column (or raw in case of horizontal datasets) to be adjusted. Vector values are supported.
 #' @param id The identifier of the specific element to be changed. Currently it should be only used in \code{structure}
 #' with multi-line headers (see \code{analyze} for details).
-#' @param items Specific items to be changed with the values to be assigned. If the values are set to \code{NA}, the specific
-#' item will be removed from the block (only for \code{kets}). Items may be multi-valued.
+#' @param items Specific items to be changed with the values to be assigned. If the values are set to \code{NA}, \code{NULL}
+#' or \code{""}, the specific item will be removed from the block (only for \code{kets}). Items may be multi-valued.
 #'
 #' @return adjusted structure of the \code{df} data set
 #'
@@ -49,7 +49,7 @@
 #'
 #' #adjust keys
 #' keys <- adjust(df1$keys, column = 3, items = list('id.x' = c(3,1,2) , 'id.y' = c(1,2,3) ) )
-#' keys <- adjust(df1$keys, column = 3, items = list('id.x' = c(3,1,2,4) , 'id.y' = c(1,2,3,4) ) )
+#' keys <- adjust(df1$keys, column = 3, items = list('id.x' = 3 , 'id.y' = NA ) )
 #'
 #' @export
 
@@ -184,13 +184,22 @@ adjust = function(block, column = NULL, id = NULL, items = NULL) {
                     if(id_xy) { #change matching ids
                      for(i in 1:length(items$id.x) ) {
                       if( sum(items$id.x[[i]] == x$id.x) > 0 ) { #if id.x is already defined, change it
+                        if(isMissing(items$id.y[[i]])) {
+                          x$id.y   <- x$id.y[-which( x$id.x == items$id.x[[i]] )];
+                          x$name.y <- x$name.y[-which( x$id.x == items$id.x[[i]] )];
+                          x$method <- x$method[-which( x$id.x == items$id.x[[i]] )];
+                          x$class  <- x$class[-which( x$id.x == items$id.x[[i]] )];
+                          x$name.x <- x$name.x[-which( x$id.x == items$id.x[[i]] )];
+                          x$id.x   <- x$id.x[-which( x$id.x == items$id.x[[i]] )];
+                        } else {
                         x$id.y[which( x$id.x == items$id.x[[i]] )]   <- items$id.y[[i]];
                         x$name.y[which( x$id.x == items$id.x[[i]] )] <- NA;
                         if(method_xy) { x$method[which( x$id.x == items$id.x[[i]] )] <- items$method[[i]] }
-                        else { x$method[which( x$id.x == items$id.x[[i]] )] <- 'synonym-proximity-matching' }
+                        else { x$method[which( x$id.x == items$id.x[[i]] )] <- 'synonym-proximity-matching' } }
                         if(class_xy)  { x$class[which( x$id.x == items$id.x[[i]] )]  <- items$class[[i]] }
                         else { x$class[which( x$id.x == items$id.x[[i]] )] <- 'general' } }
                       else { #if id.x is not defined, add it
+                        if(!isMissing(items$id.y[[i]])) {
                         x$id.x   <- c(x$id.x, items$id.x[[i]]);
                         x$id.y   <- c(x$id.y, items$id.y[[i]])
                         x$name.x <- c(x$name.x, NA);
@@ -198,7 +207,7 @@ adjust = function(block, column = NULL, id = NULL, items = NULL) {
                         if(method_xy) { x$method <- c(x$method, items$method[[i]]) }
                         else { x$method <- c(x$method, 'synonym-proximity-matching') }
                         if(class_xy)  { x$class  <- c(x$class, items$class[[i]]) }
-                        else { x$class  <- c(x$class, 'general') } } }
+                        else { x$class  <- c(x$class, 'general') } } } }
                     }
                     return(x)
                   } else {

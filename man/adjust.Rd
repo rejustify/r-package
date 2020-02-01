@@ -15,8 +15,8 @@ adjust(block, column = NULL, id = NULL, items = NULL)
 \item{id}{The identifier of the specific element to be changed. Currently it should be only used in \code{structure}
 with multi-line headers (see \code{analyze} for details).}
 
-\item{items}{Specific items to be changed with the values to be assigned. If the values are set to \code{NA}, the specific
-item will be removed from the block (only for \code{kets}). Items may be multi-valued.}
+\item{items}{Specific items to be changed with the values to be assigned. If the values are set to \code{NA}, \code{NULL}
+or \code{""}, the specific item will be removed from the block (only for \code{kets}). Items may be multi-valued.}
 }
 \value{
 adjusted structure of the \code{df} data set
@@ -61,6 +61,6 @@ default <- adjust(df1$default, column = 3, items = list('Time Dimension' = '2013
 
 #adjust keys
 keys <- adjust(df1$keys, column = 3, items = list('id.x' = c(3,1,2) , 'id.y' = c(1,2,3) ) )
-keys <- adjust(df1$keys, column = 3, items = list('id.x' = c(3,1,2,4) , 'id.y' = c(1,2,3,4) ) )
+keys <- adjust(df1$keys, column = 3, items = list('id.x' = 3 , 'id.y' = NA ) )
 
 }

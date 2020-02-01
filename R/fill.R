@@ -4,7 +4,9 @@
 #' to retrieve the desired extra data points. At the current stage
 #' dataset must be rectangular, and structure should be in the shape proposed
 #' analyze function. The minimum required by the endpoint is the data set and
-#' the corresponding \code{structure}.
+#' the corresponding \code{structure}. For the moment, publically available resources are pulled through
+#' \code{DBnomics} plaftorm (see \code{https://db.nomics.world}). Other features, including private
+#' resources and models, are taken as agreed with for the account.
 #'
 #' The API calls the submitted data set by \code{x} and any server-side data set by \code{y}.
 #' The corresponding structures are marked with the same principles, as \code{structure.x} and
