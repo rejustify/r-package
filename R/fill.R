@@ -93,12 +93,78 @@ fill = function( df,
                  shape = "vertical",
                  inits = 1,
                  sep   = ",",
-                 learn = TRUE,
+                 learn = FALSE,
                  accu  = 0.75,
                  form  = 'full',
                  token = getOption("rejustify.token"),
                  email = getOption("rejustify.email"),
                  url   = getOption("rejustify.mainUrl") ) {
+
+  ###########
+  #data consistency checks
+  ###########
+
+  #check shape value
+  if( !(shape == "vertical" | shape == "horizontal") ) {
+    stop(
+      paste0(
+        "Unrecognized shape value. It should be vertical/horizontal."
+      ),
+      call. = FALSE
+    )
+  }
+
+  #check the inits value
+  tryCatch({
+    inits <- floor(inits)
+  }, error = function(e) {
+    stop(
+      paste0(
+        "Unrecognized inits value. It should be integer."
+      ),
+      call. = FALSE
+    )
+  })
+
+  #check sep value
+  if( nchar(sep) > 3  ) {
+    stop(
+      paste0(
+        "Unrecognized separator value. It should be not longer than 3 characters."
+      ),
+      call. = FALSE
+    )
+  }
+
+  #check learn value
+  if( typeof(learn) != 'logical'  ) {
+    stop(
+      paste0(
+        "Unrecognized learn value. It should be TRUE/FALSE."
+      ),
+      call. = FALSE
+    )
+  }
+
+  #check accu value
+  if( typeof(accu) != 'double'  ) {
+    stop(
+      paste0(
+        "Unrecognized accuracy value. It should be double."
+      ),
+      call. = FALSE
+    )
+  }
+
+  #check shape value
+  if( !(form == "full" | shape == "reduced") ) {
+    stop(
+      paste0(
+        "Unrecognized form value. It should be full/reduced"
+      ),
+      call. = FALSE
+    )
+  }
 
   ###########
   #structure preparation
@@ -191,11 +257,11 @@ fill = function( df,
                            userToken   = token,
                            email       = email,
                            dataForm    = form,
-                           dbAllowed   = learn,
+                           dbAllowed   = as.integer(learn),
                            minAccuracy = accu,
                            sep         = sep,
                            direction   = shape,
-                           inits       = inits), na = 'null')
+                           inits       = inits), na = 'null', auto_unbox = T)
 
   #call API
   url       <- paste(url, "/fill", sep="")

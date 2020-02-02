@@ -231,7 +231,7 @@ analyze = function( df,
                            fast        = fast,
                            email       = email,
                            sep         = sep,
-                           dbAllowed   = learn), na = 'null')
+                           dbAllowed   = learn), na = 'null', auto_unbox = T)
 
   #call API
   url       <- paste(url, "/analyze", sep="")
