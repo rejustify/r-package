@@ -1,6 +1,6 @@
 Package: rejustify
 Type: Package
-Title: Support for rejustify API
+Title: Support for Rejustify API
 Version: 1.0.0
 Author: M. Wolski <marcin@rejustify.com>
 Maintainer: M. Wolski <marcin@rejustify.com>
