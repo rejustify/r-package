@@ -8,5 +8,5 @@ To install `rejustify` package directly from github:
 
 ```r
 remotes::install_github("rejustify/r-package")
-library(rdbnomics)
+library(rejustify)
 ```
