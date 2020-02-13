@@ -125,7 +125,7 @@ adjust = function(block, column = NULL, id = NULL, items = NULL) {
             rnames <- rownames(block$default[[i]])
           }
 
-          block$default[[i]][ rnames %in% names(items), 'code_default']  <- items
+          block$default[[i]][ rnames %in% names(items), 'code_default']  <- unlist( items )
           block$default[[i]][ rnames %in% names(items), 'label_default'] <- NA    #blank label (will be filled by API)
         }
     }, error = function(e) {
