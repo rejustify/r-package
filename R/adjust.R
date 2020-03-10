@@ -76,8 +76,8 @@ adjust = function(block, column = NULL, id = NULL, items = NULL) {
   #adjust structure
   if(type == "structure") {
 
-    if( !is.null(items) & !is.null(id) & is.null(column) ) {
-      index <- block$id %in% column
+    if( !is.null(items) & !is.null(id) ) {
+      index <- block$id %in% id
     }
     if( !is.null(items) & !is.null(column) ) {
       if( is.numeric(column) ) { #if column id
