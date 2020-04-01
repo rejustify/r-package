@@ -4,20 +4,21 @@
 #' way of adjusting blocks used in communication with rejustify API, in particular with the
 #' \code{fill} endpoint. The blocks include: data structure (\code{structure}), default values
 #' (\code{default}) and matching keys (\code{kets}). Items may only be deleted for specific matching
-#' dimensions proposed by \code{keys}.
+#' dimensions proposed by \code{keys}, for the two other blocks it is possible only to change the relevant
+#' values.
 #'
 #' Upon changes in \code{structure}, the corresponding \code{p_class} or \code{p_data} will be set to -1.
-#' This is the way to inform API that the original \code{structure} has changed and in case the \code{learn}
-#' option is enabled, the new values will be used to train the algorithms. If \code{learn} is disabled, information
-#' will not be stored by the API but the changes will be recognized in the current API call.
+#' This is the way to inform API that the original \code{structure} has changed and, if \code{learn}
+#' option is enabled, the new values will be used to train the algorithms in the back end. If \code{learn}
+#' is disabled, information will not be stored by the API but the changes will be recognized in the current API call.
 #'
 #' @param block A data structure to be changed. Currently supported structures include \code{structure},
 #' \code{default} and \code{keys}.
 #' @param column The data column (or raw in case of horizontal datasets) to be adjusted. Vector values are supported.
 #' @param id The identifier of the specific element to be changed. Currently it should be only used in \code{structure}
 #' with multi-line headers (see \code{analyze} for details).
-#' @param items Specific items to be changed with the values to be assigned. If the values are set to \code{NA}, \code{NULL}
-#' or \code{""}, the specific item will be removed from the block (only for \code{kets}). Items may be multi-valued.
+#' @param items Specific items to be changed with the new values to be assigned. If the values are set to \code{NA}, \code{NULL}
+#' or \code{""}, the specific item will be removed from the block (only for \code{keys}). Items may be multi-valued.
 #'
 #' @return adjusted structure of the \code{df} data set
 #'
@@ -38,7 +39,7 @@
 #' st <- analyze(df)
 #'
 #' #adjust structures
-#' st <- adjust(st, column = 2, items = list('feature' = 'country'))
+#' st <- adjust(st, id = 2, items = list('feature' = 'country'))
 #' st <- adjust(st, column = 3, items = list('provider' = 'IMF', 'table' = 'WEO'))
 #'
 #' #endpoint fill

@@ -1,6 +1,6 @@
 #' checks if a variable has non-missing values
 #'
-#' @description The function checks if a variable is either null, NA, or has an
+#' @description The function checks if a variable is either \code{null}, \code{NA}, or has an
 #' assigned value. In case of vectors, the condition is set on all values.
 #'
 #' @param x Variable to test.

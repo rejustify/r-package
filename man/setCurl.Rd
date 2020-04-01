@@ -7,7 +7,8 @@
 setCurl(
   mainUrl = "http://api.rejustify.com",
   proxyUrl = getOption("rejustify.proxyUrl"),
-  proxyPort = getOption("rejustify.proxyPort")
+  proxyPort = getOption("rejustify.proxyPort"),
+  learn = getOption("rejustify.learn")
 )
 }
 \arguments{
@@ -17,6 +18,9 @@ setCurl(
 \item{proxyUrl}{Address of the proxy server.}
 
 \item{proxyPort}{Port for communication with the proxy server.}
+
+\item{learn}{Enable AI learning in all API calls by setting \code{learn=TRUE}. You can
+also specify the learn option in the relevant functions directly.}
 }
 \description{
 The command stores the connection details into memory to be easier accessed by

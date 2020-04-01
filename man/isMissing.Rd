@@ -10,6 +10,6 @@ isMissing(x)
 \item{x}{Variable to test.}
 }
 \description{
-The function checks if a variable is either null, NA, or has an
+The function checks if a variable is either \code{null}, \code{NA}, or has an
 assigned value. In case of vectors, the condition is set on all values.
 }

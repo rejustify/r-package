@@ -7,6 +7,8 @@
 #' \code{http://api.rejustify.com}, but depending on the customer needs, the address may change.
 #' @param proxyUrl Address of the proxy server.
 #' @param proxyPort Port for communication with the proxy server.
+#' @param learn Enable AI learning in all API calls by setting \code{learn=TRUE}. You can
+#' also specify the learn option in the relevant functions directly.
 #'
 #' @examples
 #' #setting up connection through proxy
@@ -16,11 +18,13 @@
 
 setCurl = function(mainUrl   = "http://api.rejustify.com",
                    proxyUrl  = getOption("rejustify.proxyUrl"),
-                   proxyPort = getOption("rejustify.proxyPort") ) {
+                   proxyPort = getOption("rejustify.proxyPort"),
+                   learn     = getOption("rejustify.learn")) {
 
   #set the configuration values
   options( rejustify.mainUrl   = mainUrl )
-  options( rejustify.proxy     = ifelse(is.null(proxyUrl), FALSE, TRUE) )
+  options( rejustify.proxy     = ifelse(is.null(proxyUrl), FALSE, proxyUrl) )
   options( rejustify.proxyUrl  = proxyUrl )
   options( rejustify.proxyPort = proxyPort )
+  options( rejustify.learn     = ifelse(is.null(learn), FALSE, learn) )
 }

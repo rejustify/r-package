@@ -12,7 +12,7 @@ fill(
   shape = "vertical",
   inits = 1,
   sep = ",",
-  learn = TRUE,
+  learn = getOption("rejustify.learn"),
   accu = 0.75,
   form = "full",
   token = getOption("rejustify.token"),
@@ -32,10 +32,10 @@ endpoint.}
 
 \item{keys}{The matching keys and matching methods between dimensions in \code{x} and {y} data sets. The elements in
 \code{keys} are determined based on information provided in data \code{x} and \code{y}, for each empty column. The details
-behind both data structures can be visualized by \code{structure.x} and \code{y}.
+behind both data structures can be visualized by \code{structure.x} and \code{structure.y}.
 
-Matching keys are given consecutively, i.e. the first elements in \code{id.x} and \code{name.x} correspond
-to the first elements in \code{id.y} and \code{name.y}. Dimension names are given for the better readability of
+Matching keys are given consecutively, i.e. the first element in \code{id.x} and \code{name.x} corresponds
+to the first element in \code{id.y} and \code{name.y}, and so on. Dimension names are given for better readability of
 the results, however, they are not necessary for API recognition. \code{keys} return also data classification in
 element \code{class} and the proposed matching method for each part of \code{id.x} and \code{id.y}.
 
@@ -43,37 +43,39 @@ Currently, API suports 6 matching methods: \code{synonym-proximity-matching}, \c
 \code{exact-matching} and \code{value-selection}, which are given in a diminishing order of complexitiy. \code{synonym-proximity-matching}
 uses the proximity between the values in data \code{x} and \code{y} to the coresponding values in rejustify dictionary. If the proximity
 is above threshold \code{accu} and there are values in \code{x} and \code{y} pointing to the same element in the dictionary, the values will
-be matched. \code{synonym-matching} and \code{proximity-matching} use a similar logic either of the steps described for
+be matched. \code{synonym-matching} and \code{proximity-matching} use similar logic of either of the steps described for
 \code{synonym-proximity-matching}. \code{time-matching} aims at standardizing the time values to the same format before matching. For proper
 functioning it requires an accurate characterization of date format in \code{structure.x} (\code{structure.y} is already classified by rejustify).
 \code{exact-matching} will match two values only if they are identical. \code{value-selection} is a quasi matching method which for single-valued
 dimension \code{x} will return single value from \code{y}, as suggested by \code{default} specification. It is the most efficient
-matching type for dimensions which do not show any variability.}
+matching method for dimensions which do not show any variability.}
 
 \item{default}{Default values used to lock dimensions in data \code{y} which will be not used for matching against
 data \code{x}. Each empty column to be filled, characterized by \code{default$column.id.x}, must contain description of
 the default values. If missing, the API will propose the default values in line with the history of how it was
 used in the past.}
 
-\item{shape}{It informs the API whether the data set should be read in by
-columns (vertical) or by rows (horizontal). The default is vertical.}
+\item{shape}{It informs the API whether the data set should be read by
+columns (\code{vertical}) or by rows (\code{horizontal}). The default is \code{vertical}.}
 
 \item{inits}{It informs the API how many initial rows (or columns in
 horizontal data), correspond to the header description. The default
-is inits=1.}
+is \code{inits=1}.}
 
 \item{sep}{The header can also be described by single field values,
 separated by a given character separator, for instance 'GDP, Austria, 1999'.
 The option informs the API which separator should be used to split the
-initial header string into corresponding dimensions. The default is ','.}
+initial header string into corresponding dimensions. The default is \code{sep=','}.}
 
-\item{learn}{It is TRUE if the user accepts rejustify to track her/his activity
-to enhance the performance of the AI algorithms. The default is FALSE.}
+\item{learn}{It is \code{TRUE} if the user accepts rejustify to track her/his activity
+to enhance the performance of the AI algorithms (it is not enabled by default). To change this option
+for all API calls run \code{setCurl(learn=TRUE)}.}
 
-\item{accu}{The minimum distance between strings to consider them as similar.}
+\item{accu}{Acceptable accuracy level on a scale from 0 to 1. It is used in the matching algorithms
+to determine string similarity. The default is \code{accu=0.75}.}
 
-\item{form}{Requests the data to be returned either in \code{full}, or \code{partial shape}.
-The former returns the full original data with filled empty columns. The latter returns only the filled columns.}
+\item{form}{Requests the data to be returned either in \code{full}, or \code{partial} shape.
+The former returns the original data with filled empty columns. The latter returns only the filled columns.}
 
 \item{token}{API token. By default read from global variables.}
 
@@ -85,16 +87,16 @@ The former returns the full original data with filled empty columns. The latter 
 list consisting of 5 elements: \code{data}, \code{structure.x}, \code{structure.y}, \code{keys} and \code{default}
 }
 \description{
-The function submits the request tp the API fill endpoint
+The function submits the request to the API fill endpoint
 to retrieve the desired extra data points. At the current stage
 dataset must be rectangular, and structure should be in the shape proposed
 analyze function. The minimum required by the endpoint is the data set and
-the corresponding \code{structure}. For the moment, publically available resources are pulled through
-\code{DBnomics} plaftorm (see \code{https://db.nomics.world}). Other features, including private
-resources and models, are taken as agreed with for the account.
+the corresponding \code{structure}. You can browse the available resources at
+\code{https://rejustify.com/repos}). Other features, including private
+resources and models, are taken as defined for the account.
 
-The API calls the submitted data set by \code{x} and any server-side data set by \code{y}.
-The corresponding structures are marked with the same principles, as \code{structure.x} and
+The API defines the submitted data set as \code{x} and any server-side data set as \code{y}.
+The corresponding structures are marked with the same principle, as \code{structure.x} and
 \code{structure.y}, for instance. The principle rule of any data manipulation is to never change
 data \code{x} (except for missing values), but only adjust \code{y}.
 }
