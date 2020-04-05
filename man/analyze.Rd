@@ -104,14 +104,14 @@ register(token = "YOUR_TOKEN", email = "YOUR_EMAIL")
 #sample data set
 df <- data.frame(year = c("2009", "2010", "2011"),
                  country = c("Poland", "Poland", "Poland"),
-                 `gross domestic product` = c(NA, NA, NA),
+                 `gross domestic product` = NA,
                  check.names = FALSE, stringsAsFactors = FALSE)
 analyze(df)
 
 #data set with one-line multi-dimension header (semi-colon separated)
 df <- data.frame(country = c("Poland", "Poland", "Poland"),
-                 `gross domestic product;2009` = c(NA, NA, NA),
-                 `gross domestic product;2010` = c(NA, NA, NA),
+                 `gross domestic product;2009` = NA,
+                 `gross domestic product;2010` = NA,
                   check.names = FALSE, stringsAsFactors = FALSE)
 analyze(df, sep = ";")
 

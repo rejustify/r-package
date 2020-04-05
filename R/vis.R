@@ -9,11 +9,16 @@
 #' not displayed by default.
 #'
 #' @return list containing the pairs of value code and label
-#' @examples
-#' #rdf <- return fill object (not run)
-#' vis(rdf)
-#' vis(rdf, details = TRUE)
 #'
+#' @examples
+#' \dontrun{
+#'  #rdf is an object returned by fill function
+#'  vis(rdf)
+#'  vis(rdf, details = TRUE)
+#' }
+#'
+#' @importFrom grDevices rainbow
+#' @importFrom graphics legend par plot mtext text legend rect
 #' @export
 
 vis = function( object , column = NULL, details = FALSE ) {
@@ -21,6 +26,15 @@ vis = function( object , column = NULL, details = FALSE ) {
   ###########
   # consistency checks
   ###########
+
+  if( length(object) < 4 ) {
+    stop(
+      paste0(
+        "Incorrect object element."
+      ),
+      call. = FALSE
+    )
+  }
 
   if( is.null(object$structure.x) | is.null(object$structure.y) | is.null(object$keys) | is.null(object$default) ) {
     stop(
@@ -86,7 +100,7 @@ vis = function( object , column = NULL, details = FALSE ) {
   text(10+w+10+w/2, n*h+bottomspace, labels = 'Structure Y')
 
   #legend
-  legend('bottom', legend=object$keys[[ii]]$method, fill=colors,  bty = 'n', xjust = 0.5, ncol = 3)
+  legend('bottom', legend=object$keys[[ii]]$method, fill=colors,  bty = 'n', xjust = 0.5, ncol = 3, cex = 0.85)
 
   #classes
   mm      <- max(nchar(object$structure.x$class))

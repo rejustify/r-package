@@ -7,6 +7,7 @@
 #' @param provider Relevant provider (required).
 #' @param table Relevant provider (required).
 #' @param dim Relevant dimension from \code{provider}/\code{table} (optional).
+#' @param url API url. By default read from global variables.
 #'
 #' @return list containing the pairs of value code and label
 #' @examples
@@ -16,7 +17,7 @@
 #' labels('IMF','WEO','WEO Country')
 #'
 #' @importFrom httr content
-#' @importFrom jsonlite toJSON
+#' @importFrom jsonlite fromJSON
 #' @export
 
 labels = function( provider = NULL,
