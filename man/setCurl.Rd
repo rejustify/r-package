@@ -5,7 +5,7 @@
 \title{sets the default configuration for curl calls}
 \usage{
 setCurl(
-  mainUrl = "http://api.rejustify.com",
+  mainUrl = "https://api.rejustify.com",
   proxyUrl = getOption("rejustify.proxyUrl"),
   proxyPort = getOption("rejustify.proxyPort"),
   learn = getOption("rejustify.learn")
@@ -13,7 +13,7 @@ setCurl(
 }
 \arguments{
 \item{mainUrl}{Main address for rejustify API calls. Default is set to
-\code{http://api.rejustify.com}, but depending on the customer needs, the address may change.}
+\code{https://api.rejustify.com}, but depending on the customer needs, the address may change.}
 
 \item{proxyUrl}{Address of the proxy server.}
 

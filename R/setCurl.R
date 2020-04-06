@@ -4,7 +4,7 @@
 #' rejustify package.
 #'
 #' @param mainUrl Main address for rejustify API calls. Default is set to
-#' \code{http://api.rejustify.com}, but depending on the customer needs, the address may change.
+#' \code{https://api.rejustify.com}, but depending on the customer needs, the address may change.
 #' @param proxyUrl Address of the proxy server.
 #' @param proxyPort Port for communication with the proxy server.
 #' @param learn Enable AI learning in all API calls by setting \code{learn=TRUE}. You can
@@ -16,7 +16,7 @@
 #'
 #' @export
 
-setCurl = function(mainUrl   = "http://api.rejustify.com",
+setCurl = function(mainUrl   = "https://api.rejustify.com",
                    proxyUrl  = getOption("rejustify.proxyUrl"),
                    proxyPort = getOption("rejustify.proxyPort"),
                    learn     = getOption("rejustify.learn")) {
