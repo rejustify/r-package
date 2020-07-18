@@ -8,4 +8,5 @@ To install `rejustify` package directly from github:
 remotes::install_github("rejustify/r-package")
 library(rejustify)
 ```
-For tutorials and practical examples how to use the package efficiently, visit <a href="https://rejustify.com/r" target="_blank">rejustify.com/r</a>, or consult <a href="https://rejustify.com/download/rejustify_1.0.2.pdf" target="_blank">package documentation</a>.
+
+For tutorials and more practical examples how to use the package efficiently, visit <a href="https://rejustify.com/r" target="_blank">rejustify.com/r</a>, or consult <a href="https://rejustify.com/download/rejustify_1.0.2.pdf" target="_blank">package documentation</a>.
