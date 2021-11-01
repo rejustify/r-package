@@ -68,12 +68,12 @@ vis = function( object , column = NULL, details = FALSE ) {
   }
   column_name <- unlist( lapply( object$keys, FUN = function(x) { if(x$column.id == column) { return(x$column.name.x) } } ) )
 
-  #determine number of elements
-  n <- max(nrow(object$structure.x), nrow(object$structure.y$structure.y[[1]]))
-
   #default values
   ii      <- which( unlist( object$default$column.id.x ) == column )
   default <- object$default$default[[ii]]
+
+  #determine number of elements
+  n <- max(nrow(object$structure.x), nrow(object$structure.y$structure.y[[ii]]))
 
   #matching colors
   colors <- rainbow(length(object$keys[[ii]]$id.x), start = 0.7, end = 0.1)
@@ -139,18 +139,18 @@ vis = function( object , column = NULL, details = FALSE ) {
   }
 
   #classes
-  mm      <- max(nchar(object$structure.y$structure.y[[1]]$class))
-  class   <- lapply(object$structure.y$structure.y[[1]]$class, FUN = function(x) { paste0(x, paste0( rep(" ", 2*(mm - nchar(x))), collapse = "") )  } )
-  object$structure.y$structure.y[[1]]$feature[is.na(object$structure.y$structure.y[[1]]$feature)] <- ""
-  mm      <- max(nchar(object$structure.y$structure.y[[1]]$feature))
-  feature <-  lapply(object$structure.y$structure.y[[1]]$feature, FUN = function(x) { paste0(paste0( rep(" ", 2*(mm - nchar(x))), collapse = ""), x )  } )
+  mm      <- max(nchar(object$structure.y$structure.y[[ii]]$class))
+  class   <- lapply(object$structure.y$structure.y[[ii]]$class, FUN = function(x) { paste0(x, paste0( rep(" ", 2*(mm - nchar(x))), collapse = "") )  } )
+  object$structure.y$structure.y[[ii]]$feature[is.na(object$structure.y$structure.y[[ii]]$feature)] <- ""
+  mm      <- max(nchar(object$structure.y$structure.y[[ii]]$feature))
+  feature <-  lapply(object$structure.y$structure.y[[ii]]$feature, FUN = function(x) { paste0(paste0( rep(" ", 2*(mm - nchar(x))), collapse = ""), x )  } )
 
   #draw y box
   space <- topspace
-  for(i in 1:nrow(object$structure.y$structure.y[[1]])) {
+  for(i in 1:nrow(object$structure.y$structure.y[[ii]])) {
 
     #contour
-    index <- which(object$keys[[ii]]$id.y == object$structure.y$structure.y[[1]]$id[[i]])
+    index <- which(object$keys[[ii]]$id.y == object$structure.y$structure.y[[ii]]$id[[i]])
     if(length(index) > 0) {
       color <- colors[[index]]
       method        <- object$keys[[ii]]$method[[index]]
@@ -168,16 +168,16 @@ vis = function( object , column = NULL, details = FALSE ) {
 
     #border
     bb <- 1
-    if(object$structure.y$structure.y[[1]]$name[[i]] == "Primary Measure") bb <- 2
+    if(object$structure.y$structure.y[[ii]]$name[[i]] == "Primary Measure") bb <- 2
 
     rect(10+w+10, (n-i+1)*h - space + bottomspace, 10+w+10+w, (n-i)*h - space + bottomspace, col = color, lty = bb)
 
     #id and column number
-    if(details) text(10+w+10+15, (n-i+1)*h - space + bottomspace - 5, labels = paste0("ID:",object$structure.y$structure.y[[1]]$id[[i]]))
-    if(details) text(10+w+10+w-10, (n-i+1)*h - space + bottomspace - 5, labels = paste0("C:",object$structure.y$structure.y[[1]]$column[[i]]))
+    if(details) text(10+w+10+15, (n-i+1)*h - space + bottomspace - 5, labels = paste0("ID:",object$structure.y$structure.y[[ii]]$id[[i]]))
+    if(details) text(10+w+10+w-10, (n-i+1)*h - space + bottomspace - 5, labels = paste0("C:",object$structure.y$structure.y[[ii]]$column[[i]]))
 
     #text
-    dim_name =  object$structure.y$structure.y[[1]]$name[[i]]
+    dim_name =  object$structure.y$structure.y[[ii]]$name[[i]]
     if(nchar(dim_name) > 15) dim_name <- paste0(substr(dim_name, 1, 15),"...")
     text(10+w+10+w/2, (n-i+0.5)*h - space + bottomspace, labels = dim_name)
 
@@ -196,8 +196,8 @@ vis = function( object , column = NULL, details = FALSE ) {
   #text output
   cat( paste0("Displaying matching procedures for column ", column, ": ", column_name, "\n") )
   cat( paste0("Default matching values: \n") )
-  for(i in 1:nrow(object$structure.y$structure.y[[1]])) {
-    index <- which(object$keys[[ii]]$id.y == object$structure.y$structure.y[[1]]$id[[i]])
+  for(i in 1:nrow(object$structure.y$structure.y[[ii]])) {
+    index <- which(object$keys[[ii]]$id.y == object$structure.y$structure.y[[ii]]$id[[i]])
     if(length(index) > 0) {
       method        <- object$keys[[ii]]$method[[index]]
     } else {
