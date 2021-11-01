@@ -5,7 +5,7 @@
 #' dataset must be rectangular, and structure should be in the shape proposed
 #' analyze function. The minimum required by the endpoint is the data set and
 #' the corresponding \code{structure}. You can browse the available resources at
-#' \code{https://rejustify.com/repos}). Other features, including private
+#' \code{https://rejustify.com/repos}. Other features, including private
 #' resources and models, are taken as defined for the account.
 #'
 #' The API defines the submitted data set as \code{x} and any server-side data set as \code{y}.

@@ -3,7 +3,7 @@
 #' @description The purpose of the function is to provide a possibly seamless
 #' way of adjusting blocks used in communication with rejustify API, in particular with the
 #' \code{fill} endpoint. The blocks include: data structure (\code{structure}), default values
-#' (\code{default}) and matching keys (\code{kets}). Items may only be deleted for specific matching
+#' (\code{default}) and matching keys (\code{keys}). Items may only be deleted for specific matching
 #' dimensions proposed by \code{keys}, for the two other blocks it is possible only to change the relevant
 #' values.
 #'
